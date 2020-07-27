@@ -26,7 +26,9 @@
                             <div class="card-header d-flex flex-row justify-content-between">
                                 <div class="d-flex justify-content-center flex-column">
                                     <h4 class="mb-0"> {{ $content['message']['user posts'][0]['title'] }} </h4>
+
                                 </div>
+                                <a class="btn btn-link" href="{{ route('getCurrentPost', ['postName' => $content['message']['user posts'][0]['title']]) }}">Читать отдельно</a>
                             </div>
                             <div class="card-body">
                                 <div class="text-muted text-right">{{ $content['message']['user posts'][0]['created_at'] }}</div>
