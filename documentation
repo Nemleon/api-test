@@ -1,0 +1,3 @@
+Для использования апи, необходимо перейти на http://domain/api/...
+/login войти необходимо ввести email и password методом POST
+/register если необходимо будет создать пользователя email(unique) password name(unique) password_confirmation метод POST
