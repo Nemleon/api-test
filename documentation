@@ -1,3 +1,28 @@
 Для использования апи, необходимо перейти на http://domain/api/...
+Дамп Бд находится в корневой папке. Название - apidump.sql
+
+Общие операции :
+
 /login войти необходимо ввести email и password методом POST
 /register если необходимо будет создать пользователя email(unique) password name(unique) password_confirmation метод POST
+/categories получить все категории метод GET без параметров
+/categories/items получить все записи из определенной категории category_id метод GET
+/item получить информацию о товаре item_id метод GET
+
+Зазищенные операции (необходимо авторизоваться) :
+
+/categories/...
+    /create создать категорию category_id(only int) name description метод POST
+    /delete не доделал
+    /update не доделал
+
+/items/...
+    /addcategory добавить существующую категорию существующему товару category_id(exists) item_id(exists) метод PUT
+    /create создать товар item_id(only int) name description метод POST
+    /delete удалить товар и все связи с категориями item_id метод DELETE
+    /update обновить название/описание товара item_id(exists required) name description метод PUT
+
+
+...............................................
+
+Больше всего сложности составило продумывание архитектуры БД (никогда раньше этого не делал)
