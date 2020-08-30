@@ -1,17 +1,15 @@
 <?php
 
+namespace App\Models\Api\MiddlewareChain\User;
 
-namespace App\Http\Controllers\Api\Controllers\Validators;
-
-use App\Http\Controllers\Api\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Api\MiddlewareChain\General\GetResponse;
+use App\Models\Api\MiddlewareChain\MiddlewareChain;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
-class AuthApiValid extends Controller
+class RegisterApiValid extends MiddlewareChain
 {
-    static public function registerParamsValid(Request $request)
-    {
-        $messages = [
+    private $messages = [
         'name.required' => 'Не введено имя',
         'name.string' => 'Поле Имя не может быть пустым',
         'name.max' => 'Введено слишком много  символов (макс. 255)',
@@ -27,29 +25,38 @@ class AuthApiValid extends Controller
         'password.confirmed' => 'Пароли не совпадают',
     ];
 
-        $rules = [
-            'name' => ['required', 'string', 'max:255', 'unique:users'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ];
+    private $rules = [
+        'name' => ['required', 'string', 'max:255', 'unique:users'],
+        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        'password' => ['required', 'string', 'min:8', 'confirmed'],
+    ];
 
-        return Validator::make($request->all(), $rules, $messages);
-    }
+    private $request;
 
-    static public function loginParamsValid(Request $request)
+    public function __construct(Request $request)
     {
-        $rules = [
-            'email' => ['required', 'email', 'string'],
-            'password' => ['required', 'string']
-        ];
-
-        $messages = [
-            'email.required' => 'Вы не ввели логин',
-            'email.email' => 'Введите почтовый адрес',
-            'password.required' => 'Вы не ввели пароль',
-        ];
-
-        return Validator::make($request->all(), $rules, $messages);
+        $this->request = $request;
     }
 
+    public function handler($params = null)
+    {
+        $params = Validator::make($this->request->all(), $this->rules, $this->messages);
+
+        if ($params->fails()) {
+
+            $response = new GetResponse();
+            return $response->handler([
+                'code' => 400,
+                'message' => [
+                    'message' => $params->getMessageBag()->toArray(),
+                    'error' => true
+                ]
+            ]);
+
+        } else {
+
+            return parent::handler($params->validated());
+
+        }
+    }
 }

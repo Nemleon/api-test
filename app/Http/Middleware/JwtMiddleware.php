@@ -24,11 +24,11 @@ class JwtMiddleware
             $user = JWTAuth::parseToken()->authenticate();
         } catch (Exception $e) {
             if ($e instanceof Exceptions\TokenInvalidException) {
-                $response = ['error' => true, 'message' => 'Такого пользователя не существует, переавторизуйтесь'];
+                $response = ['error' => true, 'message' => 'Кто вы? Я Вас не звал! Авторизирутесь заново!'];
             } elseif ($e instanceof Exceptions\TokenExpiredException) {
-                $response = ['error' => true, 'message' => 'Вермя авторизации вышло'];
+                $response = ['error' => true, 'message' => 'Вермя авторизации вышло, переавторизируйтесь'];
             } else {
-                $response = ['error' => true, 'message' => 'Вы не авторизированы'];
+                $response = ['error' => true, 'message' => 'Для совершения этого действия, необходимо авторизоваться'];
             }
 
             return response()->json($response, 401);

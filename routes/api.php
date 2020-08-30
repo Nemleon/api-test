@@ -14,25 +14,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('login', 'Api\Controllers\Auth\AuthController@login'); //params - login password
-Route::post('register', 'Api\Controllers\Auth\AuthController@register'); //params - login email password password_confirmation
+Route::post('login', 'Api\Controllers\AuthController@login'); //params - login password
+Route::post('register', 'Api\Controllers\AuthController@registration'); //params - login password
 
-Route::get('blog', 'Api\Controllers\BlogController@getPosts'); //without params
-Route::get('blog/post/{postName}', 'Api\Controllers\BlogController@getPostByTitle'); //param in url - навзавание статьи из колонки title табл posts
-
-Route::get('users', 'Api\Controllers\UserController@getUsers'); //without params
-Route::get('users/blog/{name}', 'Api\Controllers\UserController@getUserByName'); //param in url - имя автора из колонки name табл users
+Route::get('categories', 'Api\Controllers\CategoryController@getAllCategory'); //without params
+Route::get('categories/items', 'Api\Controllers\ItemController@getItemsFromCategory'); //without params
+Route::get('item', 'Api\Controllers\ItemController@getItem');
 
 Route::group(['middleware' => ['jwt.verify']], function (){
-    Route::prefix('blog')->group(function () {
-        Route::post('/create', 'Api\Controllers\BlogController@createPost'); //params - title post(текст поста)
-        Route::delete('/delete', 'Api\Controllers\BlogController@deletePost'); //params - name post_id
-        Route::put('/update', 'Api\Controllers\BlogController@updatePost'); //params - (name post_id - general), (title post - additional)
+    Route::prefix('categories')->group(function () {
+        Route::post('/create', 'Api\Controllers\CategoryController@createCategory'); //params - title post(текст поста)
+        Route::delete('/delete', 'Api\Controllers\CategoryController@deleteCategory'); //params - name post_id
+        Route::put('/update', 'Api\Controllers\CategoryController@updateCategory'); //params - (name post_id - general), (title post - additional)
     });
 
-    Route::prefix('users')->group(function () {
-        Route::post('/create', 'Api\Controllers\UserController@createUser'); //params - (login password email - general), (about, role - additional)
-        Route::delete('/delete', 'Api\Controllers\UserController@deleteUser'); //params - имя пользователя из колонки name табл users
-        Route::put('/update', 'Api\Controllers\UserController@updateUser'); //params (name - general) (password email about role - additional)
+    Route::prefix('items')->group(function () {
+        Route::put('/addcategory', 'Api\Controllers\CategoryController@addCategoryToItem');
+        Route::post('/create', 'Api\Controllers\ItemController@createItem'); //params - (login password email - general), (about, role - additional)
+        Route::delete('/delete', 'Api\Controllers\ItemController@deleteItem'); //params - имя пользователя из колонки name табл users
+        Route::put('/update', 'Api\Controllers\ItemController@updateItem'); //params (name - general) (password email about role - additional)
     });
 });
