@@ -18,7 +18,7 @@ class AddCategoryToItem extends MiddlewareChain
                 $response = new GetResponse();
                 return $response->handler(
                     [
-                        'code' => 500,
+                        'code' => 400,
                         'message' => [
                             'message' => 'Товару уже присвоена эта категория',
                             'error' => true
